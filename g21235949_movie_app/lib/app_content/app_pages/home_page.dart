@@ -2,32 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-// class HomePage extends StatelessWidget {
-//   const HomePage({super.key});
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         automaticallyImplyLeading: false,
-//         title: const Text("NUTFLIX"),
-//         titleTextStyle: const TextStyle(
-//           color: Colors.red,
-//           fontWeight: FontWeight.bold,
-//         ),
-//       ),
-//       body: Center(
-//         child: const Text(
-//           "WELCOME TO NUTFLIX",
-//           style: const TextStyle(
-//             color: Colors.red,
-//             fontWeight: FontWeight.bold,
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
