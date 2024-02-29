@@ -23,7 +23,7 @@ class _HomePageState extends State<HomePage>
   }
 
   void _onSearchChanged() {
-    setState(() {}); // Trigger rebuild with the updated search query
+    setState(() {});
   }
 
   @override
