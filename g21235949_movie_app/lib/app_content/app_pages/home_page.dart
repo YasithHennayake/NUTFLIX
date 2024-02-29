@@ -1,11 +1,10 @@
+import 'dart:async';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
-
-
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  const HomePage({Key? key}) : super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -19,7 +18,12 @@ class _HomePageState extends State<HomePage>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 4, vsync: this);
+    _tabController = TabController(length: 2, vsync: this);
+    _searchController.addListener(_onSearchChanged);
+  }
+
+  void _onSearchChanged() {
+    setState(() {}); // Trigger rebuild with the updated search query
   }
 
   @override
@@ -41,69 +45,77 @@ class _HomePageState extends State<HomePage>
             border: InputBorder.none,
           ),
           style: TextStyle(color: Colors.white),
-          onSubmitted: (query) {
-            // This is a simple way to trigger the search. In a real app, you might want to use a more complex state management solution.
-            setState(() {});
-          },
         ),
         bottom: TabBar(
           controller: _tabController,
           tabs: const [
-            Tab(text: 'Latest Movies'),
-            Tab(text: 'Latest TV Shows'),
-            Tab(text: 'Top Grossing Movies'),
-            Tab(text: 'Top Grossing TV Shows'),
+            Tab(text: 'Movies'),
+            Tab(text: 'TV Shows'),
           ],
         ),
       ),
       body: TabBarView(
         controller: _tabController,
         children: [
-          MediaList(
-              type: 'movie',
-              category: 'now_playing',
-              query: _searchController.text),
-          MediaList(
-              type: 'tv', category: 'popular', query: _searchController.text),
-          MediaList(
-              type: 'movie',
-              category: 'popular',
-              query: _searchController.text),
-          MediaList(
-              type: 'tv', category: 'top_rated', query: _searchController.text),
+          CustomScrollView(
+            slivers: <Widget>[
+              MediaSliverList(
+                  type: 'movie',
+                  category: "now_playing",
+                  title: "What's on at the cinema?"),
+              MediaSliverList(
+                  type: 'movie',
+                  category: "top_rated",
+                  title: "Best movies this year"),
+              MediaSliverList(
+                  type: 'movie',
+                  category: "popular",
+                  title: "Highest-grossing movies of all time"),
+            ],
+          ),
+          CustomScrollView(
+            slivers: <Widget>[
+              MediaSliverList(
+                  type: 'tv',
+                  category: "on_the_air",
+                  title: "What's on TV now?"),
+              MediaSliverList(
+                  type: 'tv',
+                  category: "top_rated",
+                  title: "Best TV shows this year"),
+              MediaSliverList(
+                  type: 'tv',
+                  category: "popular",
+                  title: "Most popular TV shows of all time"),
+            ],
+          ),
         ],
       ),
     );
   }
 }
 
-class MediaList extends StatelessWidget {
+class MediaSliverList extends StatelessWidget {
   final String type;
   final String category;
-  final String query;
+  final String title;
 
-  const MediaList(
+  const MediaSliverList(
       {Key? key,
       required this.type,
       required this.category,
-      required this.query})
+      required this.title})
       : super(key: key);
 
   Future<List<dynamic>> fetchMedia() async {
     const apiKey =
-        '8ac4b0da7612dfd2f781452f3d30719a'; // Replace with your TMDB API Key
-    String url;
-    if (query.isEmpty) {
-      url =
-          'https://api.themoviedb.org/3/$type/$category?api_key=$apiKey&language=en-US&page=1';
-    } else {
-      url =
-          'https://api.themoviedb.org/3/search/$type?api_key=$apiKey&query=$query&language=en-US&page=1';
-    }
-    var response = await http.get(Uri.parse(url));
+        'a1a68143c5f54e5c303e8024bf089ee4'; // Replace with your TMDB API key
+    final url = Uri.parse(
+        'https://api.themoviedb.org/3/$type/$category?api_key=$apiKey&language=en-US&page=1');
+    final response = await http.get(url);
+
     if (response.statusCode == 200) {
-      Map<String, dynamic> data = json.decode(response.body);
-      return data['results'];
+      return json.decode(response.body)['results'];
     } else {
       throw Exception('Failed to load media');
     }
@@ -111,41 +123,65 @@ class MediaList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<dynamic>>(
-      future: fetchMedia(),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          return GridView.builder(
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              childAspectRatio: 0.7,
+    return SliverToBoxAdapter(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(title,
+                style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
+          ),
+          SizedBox(
+            height: 200.0, // Adjust height according to your content
+            child: FutureBuilder<List<dynamic>>(
+              future: fetchMedia(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                }
+                if (snapshot.hasData) {
+                  return ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: snapshot.data!.length,
+                    itemBuilder: (context, index) {
+                      final media = snapshot.data![index];
+                      return Container(
+                        width: 140.0, // Adjust width according to your content
+                        child: Card(
+                          clipBehavior: Clip.antiAlias,
+                          child: Column(
+                            children: <Widget>[
+                              Expanded(
+                                child: Image.network(
+                                  'https://image.tmdb.org/t/p/w500${media['poster_path']}',
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  media['title'] ?? media['name'],
+                                  style: const TextStyle(fontSize: 14.0),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                }
+                return const Text('No data found');
+              },
             ),
-            itemCount: snapshot.data!.length,
-            itemBuilder: (context, index) {
-              var media = snapshot.data![index];
-              return Card(
-                child: Column(
-                  children: <Widget>[
-                    Image.network(
-                      'https://image.tmdb.org/t/p/w500${media['poster_path']}',
-                      fit: BoxFit.cover,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(media['title'] ?? media['name'],
-                          style: const TextStyle(fontSize: 14.0),
-                          overflow: TextOverflow.ellipsis),
-                    ),
-                  ],
-                ),
-              );
-            },
-          );
-        } else if (snapshot.hasError) {
-          return Text("${snapshot.error}");
-        }
-        return const CircularProgressIndicator();
-      },
+          ),
+        ],
+      ),
     );
   }
 }
