@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'search_page.dart'; // Ensure this points to your search_page.dart file
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -13,23 +14,16 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  final TextEditingController _searchController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
-    _searchController.addListener(_onSearchChanged);
-  }
-
-  void _onSearchChanged() {
-    setState(() {});
   }
 
   @override
   void dispose() {
     _tabController.dispose();
-    _searchController.dispose();
     super.dispose();
   }
 
@@ -37,15 +31,18 @@ class _HomePageState extends State<HomePage>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: TextField(
-          controller: _searchController,
-          decoration: InputDecoration(
-            hintText: 'Search...',
-            hintStyle: TextStyle(color: Colors.white.withOpacity(0.5)),
-            border: InputBorder.none,
+        title: Center(child: const Text('NUTFLIX')),
+        titleTextStyle: const TextStyle(
+            color: Colors.red, fontSize: 22, fontWeight: FontWeight.bold),
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.search),
+            onPressed: () {
+              Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => const SearchPage()));
+            },
           ),
-          style: TextStyle(color: Colors.white),
-        ),
+        ],
         bottom: TabBar(
           controller: _tabController,
           tabs: const [
@@ -133,7 +130,7 @@ class MediaSliverList extends StatelessWidget {
                 style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
           ),
           SizedBox(
-            height: 200.0, // Adjust height according to your content
+            height: 200.0,
             child: FutureBuilder<List<dynamic>>(
               future: fetchMedia(),
               builder: (context, snapshot) {
@@ -150,7 +147,7 @@ class MediaSliverList extends StatelessWidget {
                     itemBuilder: (context, index) {
                       final media = snapshot.data![index];
                       return Container(
-                        width: 140.0, // Adjust width according to your content
+                        width: 140.0,
                         child: Card(
                           clipBehavior: Clip.antiAlias,
                           child: Column(

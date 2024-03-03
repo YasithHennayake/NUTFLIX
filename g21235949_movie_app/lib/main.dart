@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
       title: 'NUTFLIX',
       routes: {
         '/': (context) => SplashScreen(
-              // Here, you can decide whether to show the LoginPage or HomePage based on user authentication
+              //LoginPage or HomePage based on user authentication
               child: LoginPage(),
             ),
         '/login': (context) => LoginPage(),
