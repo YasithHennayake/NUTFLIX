@@ -14,8 +14,7 @@ class _SearchPageState extends State<SearchPage> {
   Future<List<dynamic>>? _searchResults;
 
   Future<List<dynamic>> _performSearch(String query) async {
-    const apiKey =
-        'a1a68143c5f54e5c303e8024bf089ee4'; // Replace with your TMDB API key
+    const apiKey = 'a1a68143c5f54e5c303e8024bf089ee4'; // API key
     final url = Uri.parse(
         'https://api.themoviedb.org/3/search/multi?api_key=$apiKey&query=$query&language=en-US&page=1');
     final response = await http.get(url);
@@ -71,14 +70,12 @@ class _SearchPageState extends State<SearchPage> {
                     itemBuilder: (context, index) {
                       final item = snapshot.data![index];
                       return Card(
-                        // Wrap in a Card widget for styling
                         margin: const EdgeInsets.symmetric(
                             vertical: 8.0, horizontal: 16.0),
                         child: ListTile(
                           leading: item['poster_path'] != null
                               ? ClipRRect(
-                                  borderRadius: BorderRadius.circular(
-                                      4.0), // Add a slight corner radius
+                                  borderRadius: BorderRadius.circular(4.0),
                                   child: Image.network(
                                     'https://image.tmdb.org/t/p/w500${item['poster_path']}',
                                     width: posterWidth,
@@ -90,12 +87,10 @@ class _SearchPageState extends State<SearchPage> {
                                   width: posterWidth,
                                   height: posterHeight,
                                   decoration: BoxDecoration(
-                                    color: Colors.grey, // Placeholder color
-                                    borderRadius: BorderRadius.circular(
-                                        4.0), // Match the image corner radius
+                                    color: Colors.grey,
+                                    borderRadius: BorderRadius.circular(4.0),
                                   ),
-                                  child: Icon(Icons.movie,
-                                      size: 50), // Placeholder icon
+                                  child: Icon(Icons.movie, size: 50),
                                 ),
                           title:
                               Text(item['title'] ?? item['name'] ?? 'No title'),
