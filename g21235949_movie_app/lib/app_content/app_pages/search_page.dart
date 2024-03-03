@@ -29,10 +29,8 @@ class _SearchPageState extends State<SearchPage> {
 
   @override
   Widget build(BuildContext context) {
-    // Define the width for the poster and calculate the height based on the 3:2 aspect ratio for a vertical layout.
-    final double posterWidth = 100; // Width of the poster
-    final double posterHeight =
-        300; // Height of the poster for a 3:2 aspect ratio
+    final double posterWidth = 100;
+    final double posterHeight = 300;
 
     return Scaffold(
       appBar: AppBar(
