@@ -14,7 +14,9 @@ Future main() async {
           apiKey: "AIzaSyDVu7C0g3VjQO43u1flaeHHOKOxAxBocdA",
           appId: "1:954112658260:web:23d870c8b1c912e5b596c1",
           messagingSenderId: "954112658260",
-          projectId: "nutflix-b4527"
+          projectId: "nutflix-b4527",
+          databaseURL:
+              "https://nutflix-b4527-default-rtdb.asia-southeast1.firebasedatabase.app/"
           // web Firebase config options
           ),
     );

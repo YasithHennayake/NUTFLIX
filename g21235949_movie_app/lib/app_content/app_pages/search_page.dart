@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:g21235949_movie_app/app_content/app_pages/movie_details_page.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({Key? key}) : super(key: key);
@@ -12,6 +13,7 @@ class SearchPage extends StatefulWidget {
 class _SearchPageState extends State<SearchPage> {
   final TextEditingController _controller = TextEditingController();
   Future<List<dynamic>>? _searchResults;
+  int _searchMode = 0; // 0 for titles, 1 for actors
 
   Future<List<dynamic>> _performSearch(String query) async {
     const apiKey = 'a1a68143c5f54e5c303e8024bf089ee4'; // API key
@@ -26,14 +28,55 @@ class _SearchPageState extends State<SearchPage> {
     }
   }
 
+  Future<List<dynamic>> searchActors(String query) async {
+    const apiKey = 'a1a68143c5f54e5c303e8024bf089ee4'; // API key
+    final url = Uri.parse(
+        'https://api.themoviedb.org/3/search/person?api_key=$apiKey&query=$query');
+    final response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      List<dynamic> results = json.decode(response.body)['results'];
+      if (results.isNotEmpty) {
+        return results.first['known_for'];
+      }
+    }
+    throw Exception('Failed to load actor search results');
+  }
+
   @override
   Widget build(BuildContext context) {
     final double posterWidth = 100;
-    final double posterHeight = 300;
+    final double posterHeight = (posterWidth / 2) * 3;
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('Search'),
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(48.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              ToggleButtons(
+                children: const <Widget>[
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16),
+                    child: Text('Titles'),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16),
+                    child: Text('Actors'),
+                  ),
+                ],
+                isSelected: [_searchMode == 0, _searchMode == 1],
+                onPressed: (int index) {
+                  setState(() {
+                    _searchMode = index;
+                  });
+                },
+              ),
+            ],
+          ),
+        ),
       ),
       body: Column(
         children: [
@@ -48,7 +91,9 @@ class _SearchPageState extends State<SearchPage> {
               onChanged: (value) {
                 if (value.isNotEmpty) {
                   setState(() {
-                    _searchResults = _performSearch(value);
+                    _searchResults = _searchMode == 0
+                        ? _performSearch(value)
+                        : searchActors(value);
                   });
                 }
               },
@@ -69,9 +114,13 @@ class _SearchPageState extends State<SearchPage> {
                     itemCount: snapshot.data!.length,
                     itemBuilder: (context, index) {
                       final item = snapshot.data![index];
-                      return Card(
-                        margin: const EdgeInsets.symmetric(
-                            vertical: 8.0, horizontal: 16.0),
+                      return InkWell(
+                        onTap: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) =>
+                                MovieDetailsPage(movieData: item),
+                          ));
+                        },
                         child: ListTile(
                           leading: item['poster_path'] != null
                               ? ClipRRect(

@@ -2,7 +2,8 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'search_page.dart';
+import 'package:g21235949_movie_app/app_content/app_pages/search_page.dart';
+import 'package:g21235949_movie_app/app_content/app_pages/movie_details_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -105,8 +106,7 @@ class MediaSliverList extends StatelessWidget {
       : super(key: key);
 
   Future<List<dynamic>> fetchMedia() async {
-    const apiKey =
-        'a1a68143c5f54e5c303e8024bf089ee4'; // Replace with your TMDB API key
+    const apiKey = 'a1a68143c5f54e5c303e8024bf089ee4';
     final url = Uri.parse(
         'https://api.themoviedb.org/3/$type/$category?api_key=$apiKey&language=en-US&page=1');
     final response = await http.get(url);
@@ -146,27 +146,35 @@ class MediaSliverList extends StatelessWidget {
                     itemCount: snapshot.data!.length,
                     itemBuilder: (context, index) {
                       final media = snapshot.data![index];
-                      return Container(
-                        width: 140.0,
-                        child: Card(
-                          clipBehavior: Clip.antiAlias,
-                          child: Column(
-                            children: <Widget>[
-                              Expanded(
-                                child: Image.network(
-                                  'https://image.tmdb.org/t/p/w500${media['poster_path']}',
-                                  fit: BoxFit.cover,
+                      return InkWell(
+                        onTap: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) =>
+                                MovieDetailsPage(movieData: media),
+                          ));
+                        },
+                        child: Container(
+                          width: 140.0,
+                          child: Card(
+                            clipBehavior: Clip.antiAlias,
+                            child: Column(
+                              children: <Widget>[
+                                Expanded(
+                                  child: Image.network(
+                                    'https://image.tmdb.org/t/p/w500${media['poster_path']}',
+                                    fit: BoxFit.cover,
+                                  ),
                                 ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  media['title'] ?? media['name'],
-                                  style: const TextStyle(fontSize: 14.0),
-                                  overflow: TextOverflow.ellipsis,
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(
+                                    media['title'] ?? media['name'],
+                                    style: const TextStyle(fontSize: 14.0),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       );
