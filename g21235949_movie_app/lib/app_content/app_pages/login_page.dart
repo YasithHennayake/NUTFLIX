@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:g21235949_movie_app/app_content/app_widgets/form_container_widget.dart';
-import 'package:g21235949_movie_app/app_content/app_pages/sign_up_page.dart';
-import 'package:g21235949_movie_app/app_content/app_services/firebase_auth_services.dart';
-import 'package:g21235949_movie_app/app_content/app_widgets/email_toast_widget.dart';
+import '../app_widgets/form_container_widget.dart';
+import 'sign_up_page.dart';
+import '../app_services/firebase_auth_services.dart';
+import '../app_widgets/email_toast_widget.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -37,8 +37,7 @@ class _LoginPageState extends State<LoginPage> {
 
     if (user != null) {
       showToast(message: "User is successfully signed in");
-      Navigator.pushReplacementNamed(
-          context, "/home"); // Adjust if using a different route
+      Navigator.pushReplacementNamed(context, "/home"); // Adjust if using a different route
     } else {
       showToast(message: "Failed to sign in. Please check your credentials.");
     }
@@ -84,8 +83,8 @@ class _LoginPageState extends State<LoginPage> {
               ElevatedButton(
                 onPressed: _isSigningIn ? null : _signIn,
                 style: ElevatedButton.styleFrom(
-                  primary: Colors.red,
-                  onPrimary: Colors.white,
+                  backgroundColor: Colors.red,
+                  foregroundColor: Colors.white, // Correct use for text/icon color
                   minimumSize: Size(double.infinity, 50),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
@@ -103,13 +102,11 @@ class _LoginPageState extends State<LoginPage> {
                   GestureDetector(
                     onTap: () => Navigator.push(
                       context,
-                      MaterialPageRoute(
-                          builder: (context) => const SignUpPage()),
+                      MaterialPageRoute(builder: (context) => const SignUpPage()),
                     ),
                     child: const Text(
                       "Sign Up",
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold, color: Colors.blue),
+                      style: TextStyle(fontWeight: FontWeight.bold, color: Colors.blue),
                     ),
                   ),
                 ],

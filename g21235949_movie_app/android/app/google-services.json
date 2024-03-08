@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "954112658260",
-    "project_id": "nutflix-b4527",
-    "storage_bucket": "nutflix-b4527.appspot.com"
+    "project_number": "713610443459",
+    "project_id": "nutflixv69",
+    "storage_bucket": "nutflixv69.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:954112658260:android:1349d69bb8386aabb596c1",
+        "mobilesdk_app_id": "1:713610443459:android:fa6c618c78798eba77c076",
         "android_client_info": {
           "package_name": "com.example.g21235949_movie_app"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDJh5w6xvGvLbipsd5i5SHSZWHxg-F2dnY"
+          "current_key": "AIzaSyBufihOS77_yJ9JjBiIdqyt1orqPaJ7cok"
         }
       ],
       "services": {

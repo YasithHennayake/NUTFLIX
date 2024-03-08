@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:g21235949_movie_app/app_content/app_widgets/form_container_widget.dart';
-import 'package:g21235949_movie_app/app_content/app_pages/login_page.dart';
-import 'package:g21235949_movie_app/app_content/app_services/firebase_auth_services.dart';
-import 'package:g21235949_movie_app/app_content/app_widgets/email_toast_widget.dart';
+import '../app_widgets/form_container_widget.dart';
+import 'login_page.dart';
+import '../app_services/firebase_auth_services.dart';
+import '../app_widgets/email_toast_widget.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({Key? key}) : super(key: key);
@@ -38,8 +38,8 @@ class _SignUpPageState extends State<SignUpPage> {
 
     if (user != null) {
       showToast(message: 'Sign-up successful');
-      // Consider adding email verification or direct navigation to the home page
-      Navigator.pushReplacementNamed(context, "/home"); // Adjust according to your routing setup
+      Navigator.pushReplacementNamed(
+          context, "/home"); // Adjust according to your routing setup
     } else {
       showToast(message: 'Sign-up failed. Please try again.');
     }
@@ -94,8 +94,9 @@ class _SignUpPageState extends State<SignUpPage> {
               ElevatedButton(
                 onPressed: _isSigningUp ? null : _signUp,
                 style: ElevatedButton.styleFrom(
-                  primary: Colors.red,
-                  onPrimary: Colors.white,
+                  backgroundColor: Colors.red, // Updated property
+                  foregroundColor:
+                      Colors.white, // Updated property for text/icon color
                   minimumSize: Size(double.infinity, 50),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
@@ -116,7 +117,8 @@ class _SignUpPageState extends State<SignUpPage> {
                   GestureDetector(
                     onTap: () => Navigator.pushAndRemoveUntil(
                       context,
-                      MaterialPageRoute(builder: (context) => const LoginPage()),
+                      MaterialPageRoute(
+                          builder: (context) => const LoginPage()),
                       (Route<dynamic> route) => false,
                     ),
                     child: const Text(

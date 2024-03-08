@@ -5,24 +5,13 @@ import 'package:g21235949_movie_app/app_content/app_pages/splash_screen.dart';
 import 'package:g21235949_movie_app/app_content/app_pages/home_page.dart';
 import 'package:g21235949_movie_app/app_content/app_pages/login_page.dart';
 import 'package:g21235949_movie_app/app_content/app_pages/sign_up_page.dart';
+import 'firebase_options.dart';
 
-Future main() async {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  if (kIsWeb) {
-    await Firebase.initializeApp(
-      options: const FirebaseOptions(
-          apiKey: "AIzaSyDVu7C0g3VjQO43u1flaeHHOKOxAxBocdA",
-          appId: "1:954112658260:web:23d870c8b1c912e5b596c1",
-          messagingSenderId: "954112658260",
-          projectId: "nutflix-b4527",
-          databaseURL:
-              "https://nutflix-b4527-default-rtdb.asia-southeast1.firebasedatabase.app/"
-          // web Firebase config options
-          ),
-    );
-  } else {
-    await Firebase.initializeApp();
-  }
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(MyApp());
 }
 
