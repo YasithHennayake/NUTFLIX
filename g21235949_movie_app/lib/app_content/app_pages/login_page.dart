@@ -1,3 +1,5 @@
+import 'dart:async';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import '../app_widgets/form_container_widget.dart';
 import 'sign_up_page.dart';
@@ -15,17 +17,38 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _isSigningIn = false;
-
+  bool _isOnline = true; // To track internet connectivity
   final FirebaseAuthServices _authServices = FirebaseAuthServices();
 
+  // Connectivity subscription
+  late StreamSubscription<ConnectivityResult> _connectivitySubscription;
+
   @override
-  void dispose() {
-    _emailController.dispose();
-    _passwordController.dispose();
-    super.dispose();
+  void initState() {
+    super.initState();
+    _connectivitySubscription =
+        Connectivity().onConnectivityChanged.listen(_updateConnectionStatus);
+  }
+
+  Future<void> _updateConnectionStatus(ConnectivityResult result) async {
+    setState(() {
+      _isOnline = result != ConnectivityResult.none;
+    });
+    if (!_isOnline) {
+      showToast(
+          message:
+              "No internet connection. Please check your network settings.");
+    }
   }
 
   Future<void> _signIn() async {
+    if (!_isOnline) {
+      showToast(
+          message:
+              "No internet connection. Please check your network settings.");
+      return;
+    }
+
     setState(() {
       _isSigningIn = true;
     });
@@ -37,7 +60,7 @@ class _LoginPageState extends State<LoginPage> {
 
     if (user != null) {
       showToast(message: "User is successfully signed in");
-      Navigator.pushReplacementNamed(context, "/home"); // Adjust if using a different route
+      Navigator.pushReplacementNamed(context, "/home");
     } else {
       showToast(message: "Failed to sign in. Please check your credentials.");
     }
@@ -45,6 +68,14 @@ class _LoginPageState extends State<LoginPage> {
     setState(() {
       _isSigningIn = false;
     });
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    _connectivitySubscription.cancel();
+    super.dispose();
   }
 
   @override
@@ -84,7 +115,7 @@ class _LoginPageState extends State<LoginPage> {
                 onPressed: _isSigningIn ? null : _signIn,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.red,
-                  foregroundColor: Colors.white, // Correct use for text/icon color
+                  foregroundColor: Colors.white,
                   minimumSize: Size(double.infinity, 50),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
@@ -102,11 +133,13 @@ class _LoginPageState extends State<LoginPage> {
                   GestureDetector(
                     onTap: () => Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const SignUpPage()),
+                      MaterialPageRoute(
+                          builder: (context) => const SignUpPage()),
                     ),
                     child: const Text(
                       "Sign Up",
-                      style: TextStyle(fontWeight: FontWeight.bold, color: Colors.blue),
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, color: Colors.blue),
                     ),
                   ),
                 ],

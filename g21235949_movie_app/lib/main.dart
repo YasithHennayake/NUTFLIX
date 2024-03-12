@@ -1,5 +1,4 @@
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:g21235949_movie_app/app_content/app_pages/splash_screen.dart';
 import 'package:g21235949_movie_app/app_content/app_pages/home_page.dart';

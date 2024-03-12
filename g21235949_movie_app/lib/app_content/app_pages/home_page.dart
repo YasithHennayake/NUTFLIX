@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:g21235949_movie_app/app_content/app_pages/movie_genres_list_page.dart';
 import 'package:http/http.dart' as http;
+import 'package:g21235949_movie_app/app_content/app_pages/login_page.dart';
 import 'package:g21235949_movie_app/app_content/app_pages/search_page.dart';
 import 'package:g21235949_movie_app/app_content/app_pages/movie_details_page.dart';
 
@@ -32,7 +34,7 @@ class _HomePageState extends State<HomePage>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Center(child: const Text('NUTFLIX')),
+        title: const Center(child: Text('NUTFLIX')),
         titleTextStyle: const TextStyle(
             color: Colors.red, fontSize: 22, fontWeight: FontWeight.bold),
         actions: <Widget>[
@@ -49,6 +51,56 @@ class _HomePageState extends State<HomePage>
           tabs: const [
             Tab(text: 'Movies'),
             Tab(text: 'TV Shows'),
+          ],
+        ),
+      ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.blue,
+              ),
+              child: Text('Menu',
+                  style: TextStyle(color: Colors.white, fontSize: 24)),
+            ),
+
+            ListTile(
+              leading: Icon(Icons.movie),
+              title: Text('Movie Genres'),
+              onTap: () {
+                Navigator.pop(context); // Close the drawer
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (context) => const GenresPage()),
+                );
+              },
+            ),
+
+            // ListTile(
+            //   leading: Icon(Icons.tv),
+            //   title: Text('TV Show Genres'),
+            //   onTap: () {
+            //     Navigator.pop(context); // Close the drawer
+            //     Navigator.of(context).pushReplacement(
+            //       MaterialPageRoute(builder: (context) => const  ()),
+            //     );
+            //   },
+
+            // )
+
+            ListTile(
+              leading: Icon(Icons.logout),
+              title: Text('Sign out'),
+              onTap: () {
+                // Close the drawer
+                Navigator.pop(context);
+                // Navigate to the LoginPage
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (context) => const LoginPage()),
+                );
+              },
+            ),
           ],
         ),
       ),
@@ -106,7 +158,8 @@ class MediaSliverList extends StatelessWidget {
       : super(key: key);
 
   Future<List<dynamic>> fetchMedia() async {
-    const apiKey = 'a1a68143c5f54e5c303e8024bf089ee4';
+    const apiKey =
+        'a1a68143c5f54e5c303e8024bf089ee4'; // Replace with your actual API key
     final url = Uri.parse(
         'https://api.themoviedb.org/3/$type/$category?api_key=$apiKey&language=en-US&page=1');
     final response = await http.get(url);

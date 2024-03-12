@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class MovieDetailsPage extends StatelessWidget {
   final Map<String, dynamic> movieData;
