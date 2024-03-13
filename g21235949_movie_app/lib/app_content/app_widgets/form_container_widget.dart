@@ -1,16 +1,20 @@
+//imported packages
 import 'package:flutter/material.dart';
 
+// Widget for a form field container with optional password visibility toggle
 class FormContainerWidget extends StatefulWidget {
-  final TextEditingController? controller;
-  final Key? fieldKey;
-  final bool? isPasswordField;
-  final String? hintText;
-  final String? labelText;
-  final String? helperText;
-  final FormFieldSetter<String>? onSaved;
-  final FormFieldValidator<String>? validator;
-  final ValueChanged<String>? onFieldSubmitted;
-  final TextInputType? inputType;
+  final TextEditingController? controller; // Controller for the text field
+  final Key? fieldKey; // Key for the form field
+  final bool? isPasswordField; // Flag to determine if it's a password field
+  final String? hintText; // Hint text for the field
+  final String? labelText; // Label text for the field
+  final String? helperText; // Helper text for the field
+  final FormFieldSetter<String>?
+      onSaved; // Function to call when the form is saved
+  final FormFieldValidator<String>? validator; // Function to validate the field
+  final ValueChanged<String>?
+      onFieldSubmitted; // Function to call when field submitted
+  final TextInputType? inputType; // Type of keyboard to display
 
   const FormContainerWidget(
       {this.controller,
@@ -45,6 +49,7 @@ class _FormContainerWidgetState extends State<FormContainerWidget> {
         controller: widget.controller,
         keyboardType: widget.inputType,
         key: widget.fieldKey,
+        // Toggle obscureText based on isPasswordField flag
         obscureText: widget.isPasswordField == true ? _obscureText : false,
         onSaved: widget.onSaved,
         validator: widget.validator,
@@ -54,6 +59,7 @@ class _FormContainerWidgetState extends State<FormContainerWidget> {
           filled: true,
           hintText: widget.hintText,
           hintStyle: TextStyle(color: Colors.black45),
+          // Toggle visibility icon based on isPasswordField flag
           suffixIcon: new GestureDetector(
             onTap: () {
               setState(() {

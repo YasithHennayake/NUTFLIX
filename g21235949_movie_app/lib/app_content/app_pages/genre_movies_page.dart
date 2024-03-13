@@ -1,31 +1,38 @@
+//impoted packages
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 import 'movie_details_page.dart'; // Ensure this is pointing to your movie details page
 
+// Class representing a page displaying movies of a specific genre
 class GenreMoviesPage extends StatefulWidget {
-  final int genreId;
-  final String genreName;
+  final int genreId; //ID of the genre
+  final String genreName; //Name of the genre
 
-  const GenreMoviesPage({Key? key, required this.genreId, required this.genreName}) : super(key: key);
+  const GenreMoviesPage(
+      {Key? key, required this.genreId, required this.genreName})
+      : super(key: key);
 
   @override
   _GenreMoviesPageState createState() => _GenreMoviesPageState();
 }
 
 class _GenreMoviesPageState extends State<GenreMoviesPage> {
-  late Future<List<dynamic>> movies;
+  late Future<List<dynamic>> movies; // Future to fetch movies of the genre
 
   @override
   void initState() {
     super.initState();
+    // Fetch movies of the specified genre upon initialization
     movies = fetchMoviesByGenre(widget.genreId);
   }
 
+  // Function to fetch movies by genre ID from the API
   Future<List<dynamic>> fetchMoviesByGenre(int genreId) async {
-    const apiKey = 'a1a68143c5f54e5c303e8024bf089ee4'; // Use your TMDB API Key
-    final url = Uri.parse('https://api.themoviedb.org/3/discover/movie?api_key=$apiKey&with_genres=$genreId');
+    const apiKey = 'a1a68143c5f54e5c303e8024bf089ee4'; // TMDB API Key
+    final url = Uri.parse(
+        'https://api.themoviedb.org/3/discover/movie?api_key=$apiKey&with_genres=$genreId');
     final response = await http.get(url);
 
     if (response.statusCode == 200) {
@@ -40,7 +47,8 @@ class _GenreMoviesPageState extends State<GenreMoviesPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('${widget.genreName} Movies'),
+        title: Text(
+            '${widget.genreName} Movies'), // Displaying the genre name in the app bar
       ),
       body: FutureBuilder<List<dynamic>>(
         future: movies,
@@ -48,7 +56,9 @@ class _GenreMoviesPageState extends State<GenreMoviesPage> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
-            return Center(child: Text("Error: ${snapshot.error}"));
+            return Center(
+                child: Text(
+                    "Error: ${snapshot.error}")); // Displaying error if fetching fails
           } else {
             return GridView.builder(
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -77,7 +87,8 @@ class _GenreMoviesPageState extends State<GenreMoviesPage> {
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
-                            movie['title'] ?? 'No Title',
+                            movie['title'] ??
+                                'No Title', // Displaying movie title
                             overflow: TextOverflow.ellipsis,
                             style: const TextStyle(fontSize: 16.0),
                           ),

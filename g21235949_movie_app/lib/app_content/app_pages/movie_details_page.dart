@@ -1,5 +1,7 @@
+//Imported packages
 import 'package:flutter/material.dart';
 
+// MovieDetailsPage Widget to display details of a movie
 class MovieDetailsPage extends StatelessWidget {
   final Map<String, dynamic> movieData;
 
@@ -7,6 +9,7 @@ class MovieDetailsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Extracting movie details from the provided data
     String title = movieData['title'] ??
         movieData['original_title'] ??
         movieData['name'] ??
@@ -22,6 +25,7 @@ class MovieDetailsPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Movie Details'),
         leading: IconButton(
+          // back button
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.of(context).pop(),
         ),
@@ -32,8 +36,7 @@ class MovieDetailsPage extends StatelessWidget {
           children: [
             posterPath.isNotEmpty
                 ? ClipRRect(
-                    borderRadius: BorderRadius.circular(
-                        8.0), // Adjust the border radius as needed
+                    borderRadius: BorderRadius.circular(8.0),
                     child: Image.network(
                       'https://image.tmdb.org/t/p/original$posterPath',
                       width: MediaQuery.of(context).size.width,
@@ -59,10 +62,12 @@ class MovieDetailsPage extends StatelessWidget {
                           style: const TextStyle(
                               fontSize: 24, fontWeight: FontWeight.bold),
                         ),
+                        // Release data
                         Text('Released on: $releaseDate'),
                       ],
                     ),
                   ),
+                  //Movie rating
                   Text(
                     rating.toString(),
                     style: const TextStyle(
@@ -74,11 +79,12 @@ class MovieDetailsPage extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Text(
+                //Movie overview
                 overview,
                 style: const TextStyle(fontSize: 16),
               ),
             ),
-            // Add more widgets to display other movie details like cast, etc.
+            // Add cast
           ],
         ),
       ),

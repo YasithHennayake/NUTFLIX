@@ -1,3 +1,4 @@
+// imported packages
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -10,11 +11,13 @@ class SearchPage extends StatefulWidget {
   _SearchPageState createState() => _SearchPageState();
 }
 
+// SearchPage Widget for searching movies and actors
 class _SearchPageState extends State<SearchPage> {
   final TextEditingController _controller = TextEditingController();
   Future<List<dynamic>>? _searchResults;
   int _searchMode = 0; // 0 for titles, 1 for actors
 
+// Function to perform search for movies and TV shows
   Future<List<dynamic>> _performSearch(String query) async {
     const apiKey = 'a1a68143c5f54e5c303e8024bf089ee4'; // API key
     final url = Uri.parse(
@@ -28,6 +31,7 @@ class _SearchPageState extends State<SearchPage> {
     }
   }
 
+// Function to search for actors
   Future<List<dynamic>> searchActors(String query) async {
     const apiKey = 'a1a68143c5f54e5c303e8024bf089ee4'; // API key
     final url = Uri.parse(

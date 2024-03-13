@@ -1,12 +1,16 @@
+//Imported packages
 import 'dart:async';
 import 'dart:convert';
-import 'package:flutter/material.dart';
-import 'package:g21235949_movie_app/app_content/app_pages/movie_genres_list_page.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter/material.dart';
+
+//Imported pages
+import 'package:g21235949_movie_app/app_content/app_pages/movie_genres_list_page.dart';
 import 'package:g21235949_movie_app/app_content/app_pages/login_page.dart';
 import 'package:g21235949_movie_app/app_content/app_pages/search_page.dart';
 import 'package:g21235949_movie_app/app_content/app_pages/movie_details_page.dart';
 
+// Class representing the HomePage
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
@@ -14,6 +18,7 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
+// State class for the HomePage
 class _HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
@@ -34,19 +39,23 @@ class _HomePageState extends State<HomePage>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        // AppBar title
         title: const Center(child: Text('NUTFLIX')),
         titleTextStyle: const TextStyle(
             color: Colors.red, fontSize: 22, fontWeight: FontWeight.bold),
         actions: <Widget>[
           IconButton(
+            // Search icon button.
             icon: const Icon(Icons.search),
             onPressed: () {
+              // Navigate to the SearchPage.
               Navigator.of(context).push(
                   MaterialPageRoute(builder: (context) => const SearchPage()));
             },
           ),
         ],
         bottom: TabBar(
+          // TabBar for switching between 'Movies' and 'TV Shows'
           controller: _tabController,
           tabs: const [
             Tab(text: 'Movies'),
@@ -55,22 +64,25 @@ class _HomePageState extends State<HomePage>
         ),
       ),
       drawer: Drawer(
+        // Drawer for navigation menu.
         child: ListView(
           padding: EdgeInsets.zero,
           children: <Widget>[
             DrawerHeader(
               decoration: BoxDecoration(
-                color: Colors.blue,
+                color: Colors.red,
               ),
               child: Text('Menu',
                   style: TextStyle(color: Colors.white, fontSize: 24)),
             ),
 
             ListTile(
+              // List tile for navigating to Movie Genres page
               leading: Icon(Icons.movie),
               title: Text('Movie Genres'),
               onTap: () {
-                Navigator.pop(context); // Close the drawer
+                // Close the drawer and navigate to the GenresPage.
+                Navigator.pop(context);
                 Navigator.of(context).pushReplacement(
                   MaterialPageRoute(builder: (context) => const GenresPage()),
                 );
@@ -90,6 +102,7 @@ class _HomePageState extends State<HomePage>
             // )
 
             ListTile(
+              // List tile for signing out.
               leading: Icon(Icons.logout),
               title: Text('Sign out'),
               onTap: () {
@@ -105,9 +118,11 @@ class _HomePageState extends State<HomePage>
         ),
       ),
       body: TabBarView(
+        // TabBarView for displaying content based on selected tab
         controller: _tabController,
         children: [
           CustomScrollView(
+            // Tab for displaying movie content
             slivers: <Widget>[
               MediaSliverList(
                   type: 'movie',
@@ -123,6 +138,7 @@ class _HomePageState extends State<HomePage>
                   title: "Highest-grossing movies of all time"),
             ],
           ),
+          // Tab for displaying TV show content
           CustomScrollView(
             slivers: <Widget>[
               MediaSliverList(
@@ -145,6 +161,7 @@ class _HomePageState extends State<HomePage>
   }
 }
 
+// Widget for displaying a sliver list of media items
 class MediaSliverList extends StatelessWidget {
   final String type;
   final String category;
@@ -157,9 +174,9 @@ class MediaSliverList extends StatelessWidget {
       required this.title})
       : super(key: key);
 
+  // Method to fetch media data from the API
   Future<List<dynamic>> fetchMedia() async {
-    const apiKey =
-        'a1a68143c5f54e5c303e8024bf089ee4'; // Replace with your actual API key
+    const apiKey = 'a1a68143c5f54e5c303e8024bf089ee4';
     final url = Uri.parse(
         'https://api.themoviedb.org/3/$type/$category?api_key=$apiKey&language=en-US&page=1');
     final response = await http.get(url);
@@ -188,12 +205,15 @@ class MediaSliverList extends StatelessWidget {
               future: fetchMedia(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
+                  // Loading indicator while fetching data
                   return const Center(child: CircularProgressIndicator());
                 }
                 if (snapshot.hasError) {
+                  // Displaying error if data retrieval fail
                   return Center(child: Text('Error: ${snapshot.error}'));
                 }
                 if (snapshot.hasData) {
+                  // Displaying list of media items if data is available
                   return ListView.builder(
                     scrollDirection: Axis.horizontal,
                     itemCount: snapshot.data!.length,
@@ -201,6 +221,7 @@ class MediaSliverList extends StatelessWidget {
                       final media = snapshot.data![index];
                       return InkWell(
                         onTap: () {
+                          // Navigate to the MovieDetailsPage
                           Navigator.of(context).push(MaterialPageRoute(
                             builder: (context) =>
                                 MovieDetailsPage(movieData: media),
@@ -234,6 +255,7 @@ class MediaSliverList extends StatelessWidget {
                     },
                   );
                 }
+                // Displaying a message if no data is found
                 return const Text('No data found');
               },
             ),

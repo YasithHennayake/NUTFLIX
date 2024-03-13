@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:g21235949_movie_app/app_content/app_pages/genre_movies_page.dart';
+import 'package:g21235949_movie_app/app_content/app_pages/home_page.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'genre_movies_page.dart';
+
 
 class GenresPage extends StatefulWidget {
   const GenresPage({Key? key}) : super(key: key);
@@ -41,7 +42,10 @@ class _GenresPageState extends State<GenresPage> {
         title: const Text('Movie Genres'),
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: () => Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => HomePage()),
+          ),
         ),
       ),
       body: FutureBuilder<List<dynamic>>(

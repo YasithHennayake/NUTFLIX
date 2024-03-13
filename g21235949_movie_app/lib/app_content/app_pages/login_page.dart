@@ -1,3 +1,4 @@
+//imported packages
 import 'dart:async';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +7,7 @@ import 'sign_up_page.dart';
 import '../app_services/firebase_auth_services.dart';
 import '../app_widgets/email_toast_widget.dart';
 
+// Login Page Widget
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
 
@@ -13,6 +15,7 @@ class LoginPage extends StatefulWidget {
   _LoginPageState createState() => _LoginPageState();
 }
 
+// State class for the Login Page
 class _LoginPageState extends State<LoginPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -26,10 +29,12 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
+    // Initialize the connectivity subscription
     _connectivitySubscription =
         Connectivity().onConnectivityChanged.listen(_updateConnectionStatus);
   }
 
+  // Method to update internet connectivity status
   Future<void> _updateConnectionStatus(ConnectivityResult result) async {
     setState(() {
       _isOnline = result != ConnectivityResult.none;
@@ -41,8 +46,10 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
+  // Method to handle the sign-in process
   Future<void> _signIn() async {
     if (!_isOnline) {
+      // Check internet connection before attempting sign-in
       showToast(
           message:
               "No internet connection. Please check your network settings.");
@@ -59,9 +66,11 @@ class _LoginPageState extends State<LoginPage> {
     );
 
     if (user != null) {
+      // Show success message and navigate to home page if sign-in successful
       showToast(message: "User is successfully signed in");
       Navigator.pushReplacementNamed(context, "/home");
     } else {
+      // Show error message if sign-in failed
       showToast(message: "Failed to sign in. Please check your credentials.");
     }
 
@@ -72,6 +81,7 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   void dispose() {
+    // Dispose controllers and subscription when the widget is disposed
     _emailController.dispose();
     _passwordController.dispose();
     _connectivitySubscription.cancel();
@@ -99,18 +109,21 @@ class _LoginPageState extends State<LoginPage> {
                 style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 36),
+              // Email input field
               FormContainerWidget(
                 controller: _emailController,
                 hintText: "Email",
                 isPasswordField: false,
               ),
               const SizedBox(height: 12),
+              // Password input field
               FormContainerWidget(
                 controller: _passwordController,
                 hintText: "Password",
                 isPasswordField: true,
               ),
               const SizedBox(height: 24),
+              // Login Button
               ElevatedButton(
                 onPressed: _isSigningIn ? null : _signIn,
                 style: ElevatedButton.styleFrom(

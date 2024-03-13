@@ -1,10 +1,12 @@
+//imported packages
 import 'package:firebase_auth/firebase_auth.dart';
-
 import 'package:g21235949_movie_app/app_content/app_widgets/email_toast_widget.dart';
 
+// Service class for Firebase Authentication
 class FirebaseAuthServices {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
+  // Method to sign up a user with email and password
   Future<User?> signUpWithEmailAndPassword(
       String email, String password) async {
     try {
@@ -12,6 +14,7 @@ class FirebaseAuthServices {
           email: email, password: password);
       return credential.user;
     } on FirebaseAuthException catch (e) {
+      // Handle specific FirebaseAuthExceptions
       if (e.code == 'email-already-in-use') {
         showToast(message: 'The email address is already in use.');
       } else {
@@ -21,6 +24,7 @@ class FirebaseAuthServices {
     return null;
   }
 
+  // Method to sign in a user with email and password
   Future<User?> signInWithEmailAndPassword(
       String email, String password) async {
     try {
