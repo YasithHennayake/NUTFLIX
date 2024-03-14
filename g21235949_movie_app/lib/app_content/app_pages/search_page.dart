@@ -1,4 +1,3 @@
-// imported packages
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -11,17 +10,14 @@ class SearchPage extends StatefulWidget {
   _SearchPageState createState() => _SearchPageState();
 }
 
-// SearchPage Widget for searching movies and actors
 class _SearchPageState extends State<SearchPage> {
   final TextEditingController _controller = TextEditingController();
   Future<List<dynamic>>? _searchResults;
   int _searchMode = 0; // 0 for titles, 1 for actors
 
-// Function to perform search for movies and TV shows
   Future<List<dynamic>> _performSearch(String query) async {
-    const apiKey = 'a1a68143c5f54e5c303e8024bf089ee4'; // API key
-    final url = Uri.parse(
-        'https://api.themoviedb.org/3/search/multi?api_key=$apiKey&query=$query&language=en-US&page=1');
+    const apiKey = 'a1a68143c5f54e5c303e8024bf089ee4';
+    final url = Uri.parse('https://api.themoviedb.org/3/search/multi?api_key=$apiKey&query=$query&language=en-US&page=1');
     final response = await http.get(url);
 
     if (response.statusCode == 200) {
@@ -31,11 +27,9 @@ class _SearchPageState extends State<SearchPage> {
     }
   }
 
-// Function to search for actors
   Future<List<dynamic>> searchActors(String query) async {
-    const apiKey = 'a1a68143c5f54e5c303e8024bf089ee4'; // API key
-    final url = Uri.parse(
-        'https://api.themoviedb.org/3/search/person?api_key=$apiKey&query=$query');
+    const apiKey = 'a1a68143c5f54e5c303e8024bf089ee4';
+    final url = Uri.parse('https://api.themoviedb.org/3/search/person?api_key=$apiKey&query=$query');
     final response = await http.get(url);
 
     if (response.statusCode == 200) {
@@ -51,6 +45,8 @@ class _SearchPageState extends State<SearchPage> {
   Widget build(BuildContext context) {
     final double posterWidth = 100;
     final double posterHeight = (posterWidth / 2) * 3;
+
+    String userId = "your_user_id_here";
 
     return Scaffold(
       appBar: AppBar(
@@ -121,8 +117,7 @@ class _SearchPageState extends State<SearchPage> {
                       return InkWell(
                         onTap: () {
                           Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) =>
-                                MovieDetailsPage(movieData: item),
+                            builder: (context) => MovieDetailsPage(movieData: item, userId: userId),
                           ));
                         },
                         child: ListTile(
@@ -145,10 +140,8 @@ class _SearchPageState extends State<SearchPage> {
                                   ),
                                   child: Icon(Icons.movie, size: 50),
                                 ),
-                          title:
-                              Text(item['title'] ?? item['name'] ?? 'No title'),
-                          subtitle: Text(
-                              'Release date: ${item['release_date'] ?? item['first_air_date'] ?? 'N/A'}'),
+                          title: Text(item['title'] ?? item['name'] ?? 'No title'),
+                          subtitle: Text('Release date: ${item['release_date'] ?? item['first_air_date'] ?? 'N/A'}'),
                         ),
                       );
                     },

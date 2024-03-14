@@ -66,7 +66,7 @@ class _SignUpPageState extends State<SignUpPage> {
           fontWeight: FontWeight.bold,
           fontSize: 22,
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: const Color.fromARGB(0, 255, 255, 255),
       ),
       body: Center(
         child: SingleChildScrollView(
@@ -135,7 +135,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       "Login",
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        color: Colors.blue,
+                        color: Colors.red,
                       ),
                     ),
                   ),

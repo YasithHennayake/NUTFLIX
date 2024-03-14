@@ -45,7 +45,7 @@ class _FormContainerWidgetState extends State<FormContainerWidget> {
         borderRadius: BorderRadius.circular(10),
       ),
       child: new TextFormField(
-        style: TextStyle(color: Colors.black),
+        style: TextStyle(color: const Color.fromARGB(255, 255, 255, 255)),
         controller: widget.controller,
         keyboardType: widget.inputType,
         key: widget.fieldKey,
@@ -58,7 +58,7 @@ class _FormContainerWidgetState extends State<FormContainerWidget> {
           border: InputBorder.none,
           filled: true,
           hintText: widget.hintText,
-          hintStyle: TextStyle(color: Colors.black45),
+          hintStyle: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
           // Toggle visibility icon based on isPasswordField flag
           suffixIcon: new GestureDetector(
             onTap: () {
@@ -69,7 +69,9 @@ class _FormContainerWidgetState extends State<FormContainerWidget> {
             child: widget.isPasswordField == true
                 ? Icon(
                     _obscureText ? Icons.visibility_off : Icons.visibility,
-                    color: _obscureText == false ? Colors.blue : Colors.grey,
+                    color: _obscureText == false
+                        ? Color.fromARGB(255, 250, 3, 3)
+                        : Colors.grey,
                   )
                 : Text(""),
           ),
