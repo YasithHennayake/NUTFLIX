@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:g21235949_movie_app/app_content/app_pages/movie_details_page.dart';
+import 'package:speech_to_text/speech_to_text.dart' as stt;
 
 class SearchPage extends StatefulWidget {
   const SearchPage({Key? key}) : super(key: key);
@@ -14,10 +15,53 @@ class _SearchPageState extends State<SearchPage> {
   final TextEditingController _controller = TextEditingController();
   Future<List<dynamic>>? _searchResults;
   int _searchMode = 0; // 0 for titles, 1 for actors
+  final stt.SpeechToText _speech = stt.SpeechToText();
+  bool _isListening = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeSpeechRecognizer();
+  }
+
+  void _initializeSpeechRecognizer() async {
+    bool available = await _speech.initialize();
+    if (!available) {
+      print('The user has denied the use of speech recognition.');
+    }
+  }
+
+  void _listen() async {
+    if (!_isListening) {
+      bool available = await _speech.initialize();
+      if (available) {
+        setState(() => _isListening = true);
+        _speech.listen(
+            onResult: (val) => setState(() {
+                  _controller.text = val.recognizedWords;
+                  // Trigger search immediately after speech recognition
+                  _triggerSearch(val.recognizedWords);
+                }));
+      }
+    } else {
+      setState(() => _isListening = false);
+      _speech.stop();
+    }
+  }
+
+  void _triggerSearch(String query) {
+    if (query.isNotEmpty) {
+      setState(() {
+        _searchResults =
+            _searchMode == 0 ? _performSearch(query) : searchActors(query);
+      });
+    }
+  }
 
   Future<List<dynamic>> _performSearch(String query) async {
     const apiKey = 'a1a68143c5f54e5c303e8024bf089ee4';
-    final url = Uri.parse('https://api.themoviedb.org/3/search/multi?api_key=$apiKey&query=$query&language=en-US&page=1');
+    final url = Uri.parse(
+        'https://api.themoviedb.org/3/search/multi?api_key=$apiKey&query=$query&language=en-US&page=1');
     final response = await http.get(url);
 
     if (response.statusCode == 200) {
@@ -29,7 +73,8 @@ class _SearchPageState extends State<SearchPage> {
 
   Future<List<dynamic>> searchActors(String query) async {
     const apiKey = 'a1a68143c5f54e5c303e8024bf089ee4';
-    final url = Uri.parse('https://api.themoviedb.org/3/search/person?api_key=$apiKey&query=$query');
+    final url = Uri.parse(
+        'https://api.themoviedb.org/3/search/person?api_key=$apiKey&query=$query');
     final response = await http.get(url);
 
     if (response.statusCode == 200) {
@@ -51,6 +96,12 @@ class _SearchPageState extends State<SearchPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Search'),
+        actions: [
+          IconButton(
+            icon: Icon(_isListening ? Icons.mic : Icons.mic_none),
+            onPressed: _listen,
+          ),
+        ],
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(48.0),
           child: Row(
@@ -88,15 +139,7 @@ class _SearchPageState extends State<SearchPage> {
                 labelText: 'Search',
                 suffixIcon: Icon(Icons.search),
               ),
-              onChanged: (value) {
-                if (value.isNotEmpty) {
-                  setState(() {
-                    _searchResults = _searchMode == 0
-                        ? _performSearch(value)
-                        : searchActors(value);
-                  });
-                }
-              },
+              onChanged: _triggerSearch,
             ),
           ),
           Expanded(
@@ -117,7 +160,8 @@ class _SearchPageState extends State<SearchPage> {
                       return InkWell(
                         onTap: () {
                           Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => MovieDetailsPage(movieData: item, userId: userId),
+                            builder: (context) => MovieDetailsPage(
+                                movieData: item, userId: userId),
                           ));
                         },
                         child: ListTile(
@@ -140,8 +184,10 @@ class _SearchPageState extends State<SearchPage> {
                                   ),
                                   child: Icon(Icons.movie, size: 50),
                                 ),
-                          title: Text(item['title'] ?? item['name'] ?? 'No title'),
-                          subtitle: Text('Release date: ${item['release_date'] ?? item['first_air_date'] ?? 'N/A'}'),
+                          title:
+                              Text(item['title'] ?? item['name'] ?? 'No title'),
+                          subtitle: Text(
+                              'Release date: ${item['release_date'] ?? item['first_air_date'] ?? 'N/A'}'),
                         ),
                       );
                     },

@@ -1,4 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<uses-permission android:name="android.permission.RECORD_AUDIO" />
+
     <application
         android:label="g21235949_movie_app"
         android:name="${applicationName}"

@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-// Adjust these imports to match the paths in your project
 import 'login_page.dart';
 import 'movie_genres_list_page.dart';
 import 'search_page.dart';
@@ -17,9 +16,10 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin {
+class _HomePageState extends State<HomePage>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  final String userId = 'exampleUserId';  // Placeholder, replace with actual user authentication logic
+  final String userId = 'exampleUserId';
 
   @override
   void initState() {
@@ -36,7 +36,8 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   Future<void> _signOut() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.clear(); // Clears all data in SharedPreferences
-    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const LoginPage()));
+    Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => const LoginPage()));
   }
 
   @override
@@ -44,12 +45,14 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     return Scaffold(
       appBar: AppBar(
         title: const Center(child: Text('NUTFLIX')),
-        titleTextStyle: const TextStyle(color: Colors.red, fontSize: 22, fontWeight: FontWeight.bold),
+        titleTextStyle: const TextStyle(
+            color: Colors.red, fontSize: 22, fontWeight: FontWeight.bold),
         actions: <Widget>[
           IconButton(
             icon: const Icon(Icons.search),
             onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) => const SearchPage()));
+              Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => const SearchPage()));
             },
           ),
         ],
@@ -67,14 +70,16 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
           children: <Widget>[
             DrawerHeader(
               decoration: BoxDecoration(color: Colors.red),
-              child: Text('Menu', style: TextStyle(color: Colors.white, fontSize: 24)),
+              child: Text('Menu',
+                  style: TextStyle(color: Colors.white, fontSize: 24)),
             ),
             ListTile(
               leading: Icon(Icons.movie),
               title: Text('Movie Genres'),
               onTap: () {
                 Navigator.pop(context);
-                Navigator.of(context).push(MaterialPageRoute(builder: (context) => const GenresPage()));
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => const GenresPage()));
               },
             ),
             ListTile(
@@ -104,15 +109,18 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
               MediaSliverList(
                   type: 'movie',
                   category: "now_playing",
-                  title: "What's on at the cinema?", userId: userId),
+                  title: "What's on at the cinema?",
+                  userId: userId),
               MediaSliverList(
                   type: 'movie',
                   category: "top_rated",
-                  title: "Best movies this year", userId: userId),
+                  title: "Best movies this year",
+                  userId: userId),
               MediaSliverList(
                   type: 'movie',
                   category: "popular",
-                  title: "Highest-grossing movies of all time", userId: userId),
+                  title: "Highest-grossing movies of all time",
+                  userId: userId),
             ],
           ),
           // Your CustomScrollView for TV Shows
@@ -121,15 +129,18 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
               MediaSliverList(
                   type: 'tv',
                   category: "on_the_air",
-                  title: "What's on TV now?", userId: userId),
+                  title: "What's on TV now?",
+                  userId: userId),
               MediaSliverList(
                   type: 'tv',
                   category: "top_rated",
-                  title: "Best TV shows this year", userId: userId),
+                  title: "Best TV shows this year",
+                  userId: userId),
               MediaSliverList(
                   type: 'tv',
                   category: "popular",
-                  title: "Most popular TV shows of all time", userId: userId),
+                  title: "Most popular TV shows of all time",
+                  userId: userId),
             ],
           ),
         ],
@@ -153,8 +164,9 @@ class MediaSliverList extends StatelessWidget {
   }) : super(key: key);
 
   Future<List<dynamic>> fetchMedia() async {
-    const apiKey = 'a1a68143c5f54e5c303e8024bf089ee4';  // Replace with your actual The Movie Database API key
-    final url = Uri.parse('https://api.themoviedb.org/3/$type/$category?api_key=$apiKey&language=en-US&page=1');
+    const apiKey = 'a1a68143c5f54e5c303e8024bf089ee4';
+    final url = Uri.parse(
+        'https://api.themoviedb.org/3/$type/$category?api_key=$apiKey&language=en-US&page=1');
     final response = await http.get(url);
 
     if (response.statusCode == 200) {
@@ -172,7 +184,8 @@ class MediaSliverList extends StatelessWidget {
         children: <Widget>[
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Text(title, style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
+            child: Text(title,
+                style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
           ),
           SizedBox(
             height: 200.0,
@@ -193,7 +206,8 @@ class MediaSliverList extends StatelessWidget {
                     return InkWell(
                       onTap: () {
                         Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => MovieDetailsPage(movieData: media, userId: userId),
+                          builder: (context) => MovieDetailsPage(
+                              movieData: media, userId: userId),
                         ));
                       },
                       child: Container(
