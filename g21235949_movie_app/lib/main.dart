@@ -8,7 +8,11 @@ import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  
+  // Initialize Firebase
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  
+  // Run the app
   runApp(MyApp());
 }
 
@@ -22,7 +26,7 @@ class MyApp extends StatelessWidget {
         brightness: Brightness.dark, // Setting the brightness to dark
       ),
       routes: {
-        '/': (context) => SplashScreen(child: LoginPage()),
+        '/': (context) => SplashScreen(child: LoginPage()), // Show splash screen with login page as the initial route
         '/login': (context) => LoginPage(),
         '/signUp': (context) => SignUpPage(),
         '/home': (context) => HomePage(),

@@ -1,8 +1,12 @@
+
+// Importing necessary packages
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+
+// Importing other pages
 import 'login_page.dart';
 import 'movie_genres_list_page.dart';
 import 'search_page.dart';
@@ -149,6 +153,7 @@ class _HomePageState extends State<HomePage>
   }
 }
 
+// Custom widget for displaying a sliver list of media items
 class MediaSliverList extends StatelessWidget {
   final String type;
   final String category;
@@ -163,6 +168,7 @@ class MediaSliverList extends StatelessWidget {
     required this.userId,
   }) : super(key: key);
 
+  // Fetch media items from the API
   Future<List<dynamic>> fetchMedia() async {
     const apiKey = 'a1a68143c5f54e5c303e8024bf089ee4';
     final url = Uri.parse(
@@ -245,3 +251,4 @@ class MediaSliverList extends StatelessWidget {
     );
   }
 }
+

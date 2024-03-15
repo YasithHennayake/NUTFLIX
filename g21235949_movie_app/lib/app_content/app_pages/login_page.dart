@@ -33,6 +33,7 @@ class _LoginPageState extends State<LoginPage> {
     _checkLoginState();
   }
 
+  // Check if the user is already logged in
   Future<void> _checkLoginState() async {
     final prefs = await SharedPreferences.getInstance();
     final loggedInState = prefs.getString('loggedInState');
@@ -42,6 +43,7 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
+  // Update the connection status when the connectivity changes
   Future<void> _updateConnectionStatus(ConnectivityResult result) async {
     setState(() {
       _isOnline = result != ConnectivityResult.none;
@@ -51,6 +53,7 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
+  // Sign in the user
   Future<void> _signIn() async {
     if (!_isOnline) {
       showToast(message: "No internet connection. Please check your network settings.");

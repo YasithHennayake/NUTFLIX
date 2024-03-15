@@ -24,6 +24,7 @@ class _SearchPageState extends State<SearchPage> {
     _initializeSpeechRecognizer();
   }
 
+  // Initialize the speech recognizer
   void _initializeSpeechRecognizer() async {
     bool available = await _speech.initialize();
     if (!available) {
@@ -31,6 +32,7 @@ class _SearchPageState extends State<SearchPage> {
     }
   }
 
+  // Start or stop listening for speech input
   void _listen() async {
     if (!_isListening) {
       bool available = await _speech.initialize();
@@ -49,6 +51,7 @@ class _SearchPageState extends State<SearchPage> {
     }
   }
 
+  // Trigger search based on the query
   void _triggerSearch(String query) {
     if (query.isNotEmpty) {
       setState(() {
@@ -58,6 +61,7 @@ class _SearchPageState extends State<SearchPage> {
     }
   }
 
+  // Perform search for titles
   Future<List<dynamic>> _performSearch(String query) async {
     const apiKey = 'a1a68143c5f54e5c303e8024bf089ee4';
     final url = Uri.parse(
@@ -71,6 +75,7 @@ class _SearchPageState extends State<SearchPage> {
     }
   }
 
+  // Perform search for actors
   Future<List<dynamic>> searchActors(String query) async {
     const apiKey = 'a1a68143c5f54e5c303e8024bf089ee4';
     final url = Uri.parse(

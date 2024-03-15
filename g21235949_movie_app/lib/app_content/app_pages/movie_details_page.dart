@@ -23,6 +23,7 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
     _isInWatchListFuture = _checkWatchList();
   }
 
+  // Check if the movie is in the user's watch list
   Future<bool> _checkWatchList() async {
     final doc = await _db
         .collection('users')
@@ -33,6 +34,7 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
     return doc.exists;
   }
 
+  // Toggle the movie's presence in the user's watch list
   void _toggleWatchList(bool isInWatchList) async {
     String movieId = widget.movieData['id'].toString();
     if (isInWatchList) {
@@ -80,6 +82,7 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            // Display the movie poster if available
             posterPath.isNotEmpty
                 ? ClipRRect(
                     borderRadius: BorderRadius.circular(8.0),
@@ -103,6 +106,7 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        // Display the movie title and release date
                         Text(
                           title,
                           style: const TextStyle(
@@ -112,6 +116,7 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
                       ],
                     ),
                   ),
+                  // Display the movie rating
                   Text(
                     rating.toString(),
                     style: const TextStyle(
@@ -123,6 +128,7 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Text(
+                // Display the movie overview
                 overview,
                 style: const TextStyle(fontSize: 16),
               ),

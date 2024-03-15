@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'movie_details_page.dart'; // Ensure this points correctly to your MovieDetailsPage
+import 'movie_details_page.dart';
 
 class GenreMoviesPage extends StatefulWidget {
   final int genreId; // ID of the genre
@@ -39,8 +39,8 @@ class _GenreMoviesPageState extends State<GenreMoviesPage> {
 
   @override
   Widget build(BuildContext context) {
-    // Placeholder for user ID - replace this with your actual logic to obtain the user ID
-    String userId = "userId"; // Ensure you replace this with the actual user ID
+
+    String userId = "userId"; 
 
     return Scaffold(
       appBar: AppBar(

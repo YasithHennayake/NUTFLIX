@@ -7,6 +7,7 @@ class WatchListService {
 
   WatchListService(this.userId);
 
+  // Check if a movie is in the watchlist
   Future<bool> isInWatchList(String movieId) async {
     final doc = await _db
         .collection('users')
@@ -17,6 +18,7 @@ class WatchListService {
     return doc.exists;
   }
 
+  // Toggle the watchlist status of a movie
   Future<void> toggleWatchList(Map<String, dynamic> movieData, bool isInWatchList) async {
     String movieId = movieData['id'].toString();
     if (isInWatchList) {
@@ -36,6 +38,7 @@ class WatchListService {
     }
   }
 
+  // Get the watchlist as a stream of movie data
   Stream<List<Map<String, dynamic>>> watchListStream() {
     return _db
         .collection('users')
@@ -91,7 +94,7 @@ class WatchListPage extends StatelessWidget {
                 title: Text(movie['title'] ?? 'No Title'),
                 subtitle: Text(movie['release_date'] ?? 'Unknown Release Date'),
                 onTap: () {
-                  // Optionally, implement onTap to navigate to movie details
+                  
                   // Navigator.of(context).push(MaterialPageRoute(builder: (context) => MovieDetailsPage(movieData: movie, userId: userId)));
                 },
               );

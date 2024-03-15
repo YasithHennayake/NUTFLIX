@@ -6,6 +6,7 @@ class WatchListService {
 
   WatchListService(this.userId);
 
+  // Check if a movie is in the user's watch list
   Future<bool> isInWatchList(String movieId) async {
     final doc = await _db
         .collection('users')
@@ -16,6 +17,7 @@ class WatchListService {
     return doc.exists;
   }
 
+  // Toggle a movie in the user's watch list
   Future<void> toggleWatchList(Map<String, dynamic> movieData, bool isInWatchList) async {
     String movieId = movieData['id'].toString();
     if (isInWatchList) {
@@ -35,6 +37,7 @@ class WatchListService {
     }
   }
 
+  // Returns a stream of the user's watch list
   Stream<List<Map<String, dynamic>>> watchListStream() {
     return _db
         .collection('users')
